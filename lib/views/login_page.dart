@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:teste_tecnico/controllers/login_controller.dart';
 import 'package:teste_tecnico/views/home_page.dart';
+import 'package:teste_tecnico/widgets/login_card.dart';
 
-import '../core/themes/colors.dart';
+import '../core/shared/themes/colors.dart';
 import '../widgets/card_gradient.dart';
 
 class LoginPage extends StatefulWidget {
@@ -21,29 +22,18 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          Column(children: [CardGradient(isLogin: true), Spacer(), SocialCard()]),
+          Column(
+            children: [
+              CardGradient(isLogin: true, null),
+              Spacer(),
+              SocialCard(),
+            ],
+          ),
           Center(
-            child: Container(
-              width: 150,
-              height: 150,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-              ),
-              child: Center(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Homepage()));
-                  },
-                  child: Text(
-                    "Login",
-                    style: TextStyle(fontSize: 24, color: AppColors.primaryDark, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.35,
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: LoginCard(),
             ),
           ),
         ],
