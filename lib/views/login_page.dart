@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:teste_tecnico/controllers/login_controller.dart';
-import 'package:teste_tecnico/views/home_page.dart';
 import 'package:teste_tecnico/widgets/login_card.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import '../core/shared/themes/colors.dart';
 import '../widgets/card_gradient.dart';
 
@@ -15,6 +14,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final LoginController loginController = LoginController();
+
+  @override
+void initState() {
+  super.initState();
+
+  print(FirebaseAuth.instance.currentUser);
+}
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
           Center(
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.35,
-              width: MediaQuery.of(context).size.width * 0.8,
+              width: 350,
               child: LoginCard(),
             ),
           ),

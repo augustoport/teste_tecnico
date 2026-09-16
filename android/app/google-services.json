@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "442075112979",
+    "project_id": "teste-tecnico-flutter",
+    "storage_bucket": "teste-tecnico-flutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442075112979:android:8ddebf7bbd8f98aac401e6",
+        "android_client_info": {
+          "package_name": "com.example.teste_tecnico"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBClgFOOK7mFplzx3yXrX6-rLS7i_2qzME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

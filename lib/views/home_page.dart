@@ -6,20 +6,21 @@ import 'package:teste_tecnico/views/auto_webview.dart';
 import 'package:teste_tecnico/widgets/card_gradient.dart';
 import 'package:teste_tecnico/widgets/drawer_bottom_card.dart';
 
+import '../controllers/login_controller.dart';
 import '../core/shared/themes/colors.dart';
 import '../widgets/home_card_type_widget.dart';
 import '../widgets/home_card_widget.dart';
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomePageState extends State<HomePage> {
   HomeCubit homeCubit = HomeCubit();
-  final Uri _url = Uri.parse('https://flutter.dev');
+  LoginController loginController = LoginController();
 
   @override
   initState() {
@@ -76,7 +77,7 @@ class _HomepageState extends State<Homepage> {
                     children: [
                       Icon(Icons.account_circle, color: Colors.white, size: 50),
                       Text(
-                        'Augusto',
+                        ' ${homeCubit.state is HomeSuccess ? (homeCubit.state as HomeSuccess).user ?? '' : ''}',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 30,
@@ -97,78 +98,13 @@ class _HomepageState extends State<Homepage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
+              leading: Icon(Icons.close,   color: Colors.white),
+              title: Text('Logout', style: TextStyle(color: Colors.white)),
               onTap: () {
-                // Handle Settings navigation
-                Navigator.pop(context);
+                loginController.logoutUser(context);
               },
             ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                // Handle Settings navigation
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                // Handle Settings navigation
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                // Handle Settings navigation
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                // Handle Settings navigation
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                // Handle Settings navigation
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                // Handle Settings navigation
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                // Handle Settings navigation
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                // Handle Settings navigation
-                Navigator.pop(context);
-              },
-            ),
-
+           
             BottomCard(),
           ],
         ),
@@ -176,7 +112,6 @@ class _HomepageState extends State<Homepage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CardGradient(isLogin: false, "Augusto"),
           Expanded(
             child: BlocBuilder(
               bloc: homeCubit,
@@ -187,83 +122,89 @@ class _HomepageState extends State<Homepage> {
                   );
                 }
                 if (state is HomeSuccess) {
-                  return Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Cotar e Contratar",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  
+                  return Column(
+                    children: [
+                      CardGradient(isLogin: false, state.user),
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Cotar e Contratar",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: .center,
+                              children: List.generate(4, (i) {
+                                return CardType(
+                                  title: [
+                                    "Automóvel",
+                                    "Residência",
+                                    "Vida",
+                                    "Acidentes Pessoais",
+                                  ][i],
+                                  icon: [
+                                    Icons.car_repair,
+                                    Icons.home,
+                                    Icons.local_hospital,
+                                    Icons.accessibility,
+                                  ][i],
+                                  onTap: [
+                                    () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              const AutomobileWebViewPage(),
+                                        ),
+                                      );
+                                    },
+                                    null,
+                                    null,
+                                    null,
+                                  ][i],
+                                );
+                              }),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              "Minha Familia",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            HomeCardWidget(
+                              icon: Icons.add_circle_outline,
+                              text:
+                                  "Adicione aqui membros da sua família e\ncompartilhe os seguros com eles.",
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              "Contratados",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            HomeCardWidget(
+                              icon: Icons.not_accessible,
+                              text: "Você ainda não possui seguros contratados.",
+                            ),
+                          ],
                         ),
-                        Row(
-                          mainAxisAlignment: .center,
-                          children: List.generate(4, (i) {
-                            return CardType(
-                              title: [
-                                "Automóvel",
-                                "Residência",
-                                "Vida",
-                                "Acidentes Pessoais",
-                              ][i],
-                              icon: [
-                                Icons.car_repair,
-                                Icons.home,
-                                Icons.local_hospital,
-                                Icons.accessibility,
-                              ][i],
-                              onTap: [
-                                () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          const AutomobileWebViewPage(),
-                                    ),
-                                  );
-                                },
-                                null,
-                                null,
-                                null,
-                              ][i],
-                            );
-                          }),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Minha Familia",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        HomeCardWidget(
-                          icon: Icons.add_circle_outline,
-                          text:
-                              "Adicione aqui membros da sua família e\ncompartilhe os seguros com eles.",
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Contratados",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        HomeCardWidget(
-                          icon: Icons.not_accessible,
-                          text: "Você ainda não possui seguros contratados.",
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   );
                 } else if (state is HomeError) {
                   return Center(child: Text("Erro ao carregar dados"));

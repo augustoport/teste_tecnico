@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BottomCard extends StatelessWidget {
-  const BottomCard();
+  const BottomCard({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../controllers/login_controller.dart';
+import '../core/logic/cubit/login/login_cubit.dart';
 import '../core/shared/themes/colors.dart';
+import '../core/utils/auth_utils.dart';
 
 class LoginCard extends StatefulWidget {
   const LoginCard({super.key});
@@ -12,6 +15,7 @@ class LoginCard extends StatefulWidget {
 
 class _LoginCardState extends State<LoginCard> {
   LoginController controller = LoginController();
+  LoginCubit loginCubit = LoginCubit();
 
   @override
   initState() {
@@ -32,70 +36,88 @@ class _LoginCardState extends State<LoginCard> {
         children: [
           Column(
             children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Entrar',
-                          style: TextStyle(
-                            color: controller.register
-                                ? const Color(0xFF33B69A)
-                                : Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Container(
-                          height: 2,
-                          width: 36,
-                          color: controller.register
-                              ? const Color(0xFF33B69A)
-                              : Colors.transparent,
-                        ),
-                      ],
-                    ),
-                  ),
+              BlocBuilder(
+                bloc: loginCubit,
 
-                  const SizedBox(width: 24),
+                builder: (context, state) {
+                  bool register = false;
 
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        controller.register = true;
-                      });
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Cadastrar',
-                          style: TextStyle(
-                            color: !controller.register
-                                ? const Color(0xFF33B69A)
-                                : Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
+                  if (state is LoginSuccess) {
+                    register = state.register;
+                  }
+
+                  return Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          context.read<LoginCubit>().changeRegister(false);
+                        },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Entrar',
+                              style: TextStyle(
+                                color: !register
+                                    ? const Color(0xFF33B69A)
+                                    : Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Container(
+                              height: 2,
+                              width: 36,
+                              color: !register
+                                  ? const Color(0xFF33B69A)
+                                  : Colors.transparent,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 4),
-                        Container(
-                          height: 2,
-                          width: 52,
-                          color: !controller.register
-                              ? const Color(0xFF33B69A)
-                              : Colors.transparent,
+                      ),
+
+                      const SizedBox(width: 24),
+
+                      GestureDetector(
+                        onTap: () {
+                          context.read<LoginCubit>().changeRegister(true);
+                        },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Cadastrar',
+                              style: TextStyle(
+                                color: register
+                                    ? const Color(0xFF33B69A)
+                                    : Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Container(
+                              height: 2,
+                              width: 52,
+                              color: register
+                                  ? const Color(0xFF33B69A)
+                                  : Colors.transparent,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ],
+                      ),
+                    ],
+                  );
+                },
               ),
               SizedBox(height: 20),
+              if (controller.register)
+                TextFieldsCustom(
+                  controller: controller.nameController,
+                  labelText: "Nome",
+                ),
+              SizedBox(height: 10),
               TextFieldsCustom(
                 controller: controller.emailController,
                 labelText: "CPF",
@@ -105,7 +127,7 @@ class _LoginCardState extends State<LoginCard> {
                 controller: controller.passwordController,
                 labelText: "Senha",
               ),
-SizedBox(height: 20),
+              SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -169,32 +191,53 @@ SizedBox(height: 20),
               ),
             ],
           ),
-          Positioned(
-            bottom: -40,
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.surface,
-              ),
+          InkWell(
+            onTap: () {
+              final email = AuthUtils.cpfToEmail(
+                controller.emailController.text,
+              );
+
+              if (controller.register) {
+                controller.registerUser(
+                  email,
+                  controller.passwordController.text,
+                  controller.nameController.text,
+                );
+              } else {
+                controller.loginUser(
+                  email,
+                  controller.passwordController.text,
+                  context,
+                );
+              }
+            },
+            child: Positioned(
+              bottom: controller.register ? -50 : -40,
               child: Container(
-                width: 50,
-                height: 50,
+                padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFF25907A),
-                      Color(0xFF63A982),
-                      Color(0xFFACB869),
-                    ],
-                    stops: [0.0, 0.55, 1.0],
-                  ),
+                  color: AppColors.surface,
                 ),
-                child: Center(
-                  child: Icon(Icons.arrow_forward, color: Colors.white),
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFF25907A),
+                        Color(0xFF63A982),
+                        Color(0xFFACB869),
+                      ],
+                      stops: [0.0, 0.55, 1.0],
+                    ),
+                  ),
+                  child: Center(
+                    child: Icon(Icons.arrow_forward, color: Colors.white),
+                  ),
                 ),
               ),
             ),
