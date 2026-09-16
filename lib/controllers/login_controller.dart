@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:teste_tecnico/core/logic/cubit/login/login_cubit.dart';
 import 'package:teste_tecnico/views/home_page.dart';
 
 import '../views/login_page.dart';
 
 class LoginController {
-  bool register = false;
-  bool rememberMe = false;
-
+  LoginCubit loginCubit = LoginCubit();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -16,7 +15,7 @@ class LoginController {
   Future<void> saveRememberMe(text) async {
     final prefs = await SharedPreferences.getInstance();
 
-    if (rememberMe) {
+    if (loginCubit.rememberMe) {
       await prefs.setBool('rememberMe', true);
       await prefs.setString('savedCpf', text);
     } else {
@@ -27,6 +26,7 @@ class LoginController {
 
   Future<void> registerUser(String cpf, String pass, String name) async {
     try {
+      loginCubit.setLoading();
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: cpf, password: pass);
 
@@ -34,12 +34,8 @@ class LoginController {
 
       await credential.user?.reload();
 
-      final user = FirebaseAuth.instance.currentUser;
-
-      print('Usuário criado: ${credential.user?.uid}');
-    } on FirebaseAuthException catch (e) {
-      print('Erro Firebase: ${e.code}');
-      print('Mensagem: ${e.message}');
+    } finally {
+      loginCubit.initPage();
     }
   }
 
@@ -51,7 +47,7 @@ class LoginController {
       );
 
       if (credential.user != null) {
-        if (rememberMe) {
+        if (loginCubit.rememberMe) {
           await saveRememberMe(cpf);
         }
 
@@ -61,14 +57,10 @@ class LoginController {
         );
       }
 
-      print('Usuário logado: ${credential.user?.uid}');
     } on FirebaseAuthException catch (e) {
-      print('Erro Firebase: ${e.code}');
-      print('Mensagem: ${e.message}');
+      loginCubit.initPage();
     }
   }
-
-  
 
   Future<void> logoutUser(context) async {
     try {

@@ -7,6 +7,13 @@ class LoginCubit extends Cubit<LoginState> {
   bool rememberMe = false;
   bool register = false;
 
+  void initPage() {
+    emit(LoginLoading());
+    Future.delayed(Duration(seconds: 1), () {
+      emit(LoginSuccess(rememberMe: rememberMe, register: register));
+    });
+  }
+
   void toggleRememberMe() {
     rememberMe = !rememberMe;
 
@@ -17,5 +24,9 @@ class LoginCubit extends Cubit<LoginState> {
     register = value;
 
     emit(LoginSuccess(rememberMe: rememberMe, register: register));
+  }
+
+  void setLoading() {
+    emit(LoginLoading());
   }
 }

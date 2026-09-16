@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter/foundation.dart';
 
 class AutomobileWebViewPage extends StatefulWidget {
   const AutomobileWebViewPage({super.key});
@@ -16,8 +17,11 @@ class _AutomobileWebViewPageState extends State<AutomobileWebViewPage> {
     super.initState();
 
     controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadRequest(Uri.parse('https://jsonplaceholder.typicode.com/'));
+
+    if (!kIsWeb) {
+      controller.setJavaScriptMode(JavaScriptMode.unrestricted);
+    }
   }
 
   @override

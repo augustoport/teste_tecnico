@@ -15,10 +15,15 @@ class BottomCard extends StatelessWidget {
         ),
       ),
       child: const Center(
-        child: Text(
-          'Olá!\nConte sempre com a gente.',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white, fontSize: 11),
+        child: Column(
+          children: [
+            Icon(Icons.email, color: Colors.white, size: 50,),
+            Text(
+              'Duvidas?\nConte sempre com a gente.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 11),
+            ),
+          ],
         ),
       ),
     );

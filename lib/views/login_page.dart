@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:teste_tecnico/controllers/login_controller.dart';
 import 'package:teste_tecnico/widgets/login_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,11 +17,11 @@ class _LoginPageState extends State<LoginPage> {
   final LoginController loginController = LoginController();
 
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-  print(FirebaseAuth.instance.currentUser);
-}
+    print(FirebaseAuth.instance.currentUser);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ void initState() {
           ),
           Center(
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.35,
+              height: MediaQuery.of(context).size.height * 0.4,
               width: 350,
               child: LoginCard(),
             ),
@@ -64,9 +65,27 @@ class SocialCard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.g_mobiledata, color: Colors.white, size: 50),
-            Icon(Icons.one_x_mobiledata, color: Colors.white, size: 50),
-            Icon(Icons.face, color: Colors.white, size: 50),
+            SvgPicture.asset(
+              height: 30,
+              width: 30,
+              'assets/svg/logo-google.svg',
+              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            ),
+            SizedBox(width: 10),
+            SvgPicture.asset(
+              height: 30,
+              width: 30,
+              'assets/svg/twitter-black-shape.svg',
+              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            ),
+            SizedBox(width: 10),
+
+            SvgPicture.asset(
+              height: 30,
+              width: 30,
+              'assets/svg/facebook-fill.svg',
+              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            ),
           ],
         ),
         SizedBox(height: MediaQuery.of(context).padding.bottom + 20),

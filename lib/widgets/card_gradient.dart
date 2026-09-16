@@ -22,27 +22,31 @@ class CardGradient extends StatelessWidget {
         borderRadius: isLogin ? BorderRadius.circular(10): null,
       ),
       child: isLogin
-          ? Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                'assets/svg/logo_tokyo.svg',
-                colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
-              ),
-              Text(
-                "Bem vindo!",
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+          ? Padding(
+            padding: const EdgeInsets.only(left: 25.0, top: 60),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SvgPicture.asset(
+                  'assets/svg/logo_tokyo.svg',
+                  colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
                 ),
-                textAlign: TextAlign.left,
-              ),
-              Text(
-                "Aqui você gerencia seus seguros e de seus familiares\nem poucos cliques!",
-                style: TextStyle(fontSize: 12, color: Colors.white),
-              ),
-            ],
+                SizedBox(height: 20),
+                Text(
+                  "Bem vindo!",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(height: 10),                Text(
+                  "Aqui você gerencia seus seguros e de seus familiares\nem poucos cliques!",
+                  style: TextStyle(fontSize: 12, color: Colors.white),
+                ),
+              ],
+            ),
           )
           : Padding(
               padding: const EdgeInsets.all(8.0),

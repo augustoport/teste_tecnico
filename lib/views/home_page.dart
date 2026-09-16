@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:teste_tecnico/core/logic/cubit/home/home_cubit.dart';
+import 'package:teste_tecnico/core/shared/consts.dart';
 import 'package:teste_tecnico/views/auto_webview.dart';
 import 'package:teste_tecnico/widgets/card_gradient.dart';
 import 'package:teste_tecnico/widgets/drawer_bottom_card.dart';
@@ -20,6 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeCubit homeCubit = HomeCubit();
+  String name = "";
   LoginController loginController = LoginController();
 
   @override
@@ -77,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Icon(Icons.account_circle, color: Colors.white, size: 50),
                       Text(
-                        ' ${homeCubit.state is HomeSuccess ? (homeCubit.state as HomeSuccess).user ?? '' : ''}',
+                        ' ${homeCubit.state is HomeSuccess ? (homeCubit.state as HomeSuccess).user ?? name : 'Usuario'}',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 30,
@@ -89,22 +91,30 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {
-                // Handle Home navigation
-                Navigator.pop(context);
-              },
+            Column(
+              children: List.generate(10, (i) {
+                return ListTile(
+                  leading: Icon(Icons.settings, color: AppColors.primary),
+                  title: Text(
+                    Consts().itens[i],
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    // Handle Home navigation
+                    Navigator.pop(context);
+                  },
+                );
+              }),
             ),
+
             ListTile(
-              leading: Icon(Icons.close,   color: Colors.white),
+              leading: Icon(Icons.close, color: Colors.white),
               title: Text('Logout', style: TextStyle(color: Colors.white)),
               onTap: () {
                 loginController.logoutUser(context);
               },
             ),
-           
+            Spacer(),
             BottomCard(),
           ],
         ),
@@ -116,13 +126,14 @@ class _HomePageState extends State<HomePage> {
             child: BlocBuilder(
               bloc: homeCubit,
               builder: (context, state) {
+                
                 if (state is HomeLoading) {
                   return Center(
                     child: CircularProgressIndicator(color: Colors.white),
                   );
                 }
                 if (state is HomeSuccess) {
-                  
+                  name = state.user ?? "";
                   return Column(
                     children: [
                       CardGradient(isLogin: false, state.user),
@@ -199,7 +210,8 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(height: 10),
                             HomeCardWidget(
                               icon: Icons.not_accessible,
-                              text: "Você ainda não possui seguros contratados.",
+                              text:
+                                  "Você ainda não possui seguros contratados.",
                             ),
                           ],
                         ),
